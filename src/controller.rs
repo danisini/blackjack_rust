@@ -1,5 +1,6 @@
 
-use crate::model:: { GameState, GameRequest, GameResponse};
+use crate::model:: { GameState, GameRequest, GameResponse, Deck};
+use crate::game_service::{GameService, GameServiceImpl};
 
 pub struct GameController;
 
@@ -14,11 +15,11 @@ impl GameController {
                 state: request.clone().state
             }
         } else {
-            GameResponse {
-                status: "success".to_string(),
-                message: "Split successful!".to_string(),
-                state: state,
-            }
+            let service = GameServiceImpl {
+                deck: Deck::new()
+            };
+
+            service.start(request)
         }
     }
 
