@@ -2,6 +2,19 @@ use serde::{Serialize, Deserialize};
 use rand::seq::SliceRandom; // For the `shuffle` method
 use rand::thread_rng;    
 
+
+#[derive(Serialize, Deserialize)]
+pub struct GameRequest {
+    pub state: GameState
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct GameResponse {
+    pub status: String,
+    pub message: String,
+    pub state: GameState
+}
+
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Card {
     suit: Suit,
