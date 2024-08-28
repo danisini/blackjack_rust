@@ -3,7 +3,7 @@ use rand::seq::SliceRandom; // For the `shuffle` method
 use rand::thread_rng;    
 
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct GameRequest {
     pub state: GameState
 }
@@ -94,20 +94,20 @@ impl Deck {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct GameState {
-    pub has_player_won: Option<bool>,
-    pub has_dealer_won: Option<bool>,
-    pub is_round_over: Option<bool>,
-    pub is_stake_doubled: Option<bool>,
-    pub stake: Option<f64>,
-    pub additional_stake: Option<f64>,
-    pub win_amount: Option<f64>,
-    pub balance: Option<f64>,
-    pub possible_actions: Option<Vec<String>>,
-    pub player_hand: Option<Vec<Card>>,
-    pub player_split_hand: Option<Vec<Card>>,
-    pub dealer_hand: Option<Vec<Card>>,
+    pub has_player_won: bool,
+    pub has_dealer_won: bool,
+    pub is_round_over: bool,
+    pub is_stake_doubled: bool,
+    pub stake: f64,
+    pub additional_stake: f64,
+    pub win_amount: f64,
+    pub balance: f64,
+    pub possible_actions: Vec<String>,
+    pub player_hand: Vec<Card>,
+    pub player_split_hand: Vec<Card>,
+    pub dealer_hand: Vec<Card>,
 }
 
 

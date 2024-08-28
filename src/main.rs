@@ -28,7 +28,7 @@ async fn main() {
     .and(warp::post())
     .and(warp::body::json())
     .map(|request: GameRequest| {
-        let response = GameController::split(request);
+        let response = GameController::start(request);
         warp::reply::json(&response)
     });
 
