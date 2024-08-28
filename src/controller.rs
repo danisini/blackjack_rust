@@ -4,19 +4,48 @@ pub struct GameController;
 
 impl GameController {
     pub fn start(request: GameRequest) -> GameResponse {
-        let game_state = GameState {
-            player_hand: Vec::new(),
-            dealer_hand: Vec::new(),
-            player_won: false,
-            dealer_won: false,
-            is_round_over: false,
-            balance: 0.0,
-            stake: 0.0,
-        };
+        let mut state = request.state;
         GameResponse {
             status: "success".to_string(),
-            message: "Game started".to_string(),
-            state: game_state,
+            message: "Game started!".to_string(),
+            state: state,
         }
     }
+
+    pub fn split(request: GameRequest) -> GameResponse {
+        let mut state = request.state;
+        GameResponse {
+            status: "success".to_string(),
+            message: "Split successful!".to_string(),
+            state: state,
+        }
+    }
+
+    pub fn double_stake(request: GameRequest) -> GameResponse {
+        let mut state = request.state;
+        GameResponse {
+            status: "success".to_string(),
+            message: "Doubled the stake successfully!".to_string(),
+            state: state,
+        }
+    }
+
+    pub fn stand(request: GameRequest) -> GameResponse {
+        let mut state = request.state;
+        GameResponse {
+            status: "success".to_string(),
+            message: "Standed!".to_string(),
+            state: state,
+        }
+    }
+
+    pub fn hit(request: GameRequest) -> GameResponse {
+        let mut state = request.state;
+        GameResponse {
+            status: "success".to_string(),
+            message: "Hit!".to_string(),
+            state: state,
+        }
+    }
+    
 }
