@@ -1,5 +1,6 @@
 mod controller;
 mod model;
+mod game_service;
 use warp::Filter;
 use crate::controller::GameController;
 use crate::model::GameRequest;
@@ -28,7 +29,7 @@ async fn main() {
     .and(warp::post())
     .and(warp::body::json())
     .map(|request: GameRequest| {
-        let response = GameController::start(request);
+        let response = GameController::split(request);
         warp::reply::json(&response)
     });
 

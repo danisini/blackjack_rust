@@ -110,6 +110,33 @@ pub struct GameState {
     pub dealer_hand: Vec<Card>,
 }
 
+impl GameState {
+    pub fn new() -> Self {
+        GameState {
+            has_player_won: false,
+            has_dealer_won: false,
+            is_round_over: false,
+            is_stake_doubled: false,
+            stake: 0.0,
+            additional_stake: 0.0,
+            win_amount: 0.0,
+            balance: 0.0, 
+            possible_actions: Vec::new(),
+            player_hand: Vec::new(),
+            player_split_hand: Vec::new(),
+            dealer_hand: Vec::new(),
+        }
+    }
+
+    pub fn set_stake(&mut self, stake:f64) {
+        self.stake = stake;
+    }
+
+    pub fn set_balance(&mut self, balance:f64) {
+        self.balance = balance;
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
