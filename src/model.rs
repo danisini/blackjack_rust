@@ -96,13 +96,18 @@ impl Deck {
 
 #[derive(Serialize, Deserialize)]
 pub struct GameState {
-    pub player_hand: Vec<Card>,
-    pub dealer_hand: Vec<Card>,
-    pub player_won: bool,
-    pub dealer_won: bool,
-    pub is_round_over: bool,
-    pub balance: f64,
-    pub stake: f64,
+    pub has_player_won: Option<bool>,
+    pub has_dealer_won: Option<bool>,
+    pub is_round_over: Option<bool>,
+    pub is_stake_doubled: Option<bool>,
+    pub stake: Option<f64>,
+    pub additional_stake: Option<f64>,
+    pub win_amount: Option<f64>,
+    pub balance: Option<f64>,
+    pub possible_actions: Option<Vec<String>>,
+    pub player_hand: Option<Vec<Card>>,
+    pub player_split_hand: Option<Vec<Card>>,
+    pub dealer_hand: Option<Vec<Card>>,
 }
 
 
