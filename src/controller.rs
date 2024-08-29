@@ -7,7 +7,8 @@ pub struct GameController;
 impl GameController {
     pub fn start(request: GameRequest) -> GameResponse {
         let mut state = request.clone().state;
-        let is_valid = ValidatorImpl::is_action_valid(&state, "/start");
+        let mut is_valid = ValidatorImpl::is_action_valid(&state, "/start");
+        is_valid = is_valid && ValidatorImpl::has_stake(request.clone());
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),

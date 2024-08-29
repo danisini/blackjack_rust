@@ -59,6 +59,7 @@ impl ResponseBuilder {
         response_state.player_split_hand = split_hand;
         response_state.dealer_hand = dealer_hand;
         response_state.player_hand = player_hand;
+        response_state.cards_dealt = state.cards_dealt;
 
         response_state
     }

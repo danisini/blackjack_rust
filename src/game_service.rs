@@ -19,8 +19,8 @@ impl GameService for GameServiceImpl {
     fn start(&self, request: GameRequest) -> GameResponse {
         let mut deck_to_use = self.deck.clone();
         let mut state = GameState::new();
-        state.set_balance(request.state.clone().balance);
-        state.set_stake(request.state.clone().stake);
+        state.balance = state.clone().balance;
+        state.stake = request.stake.unwrap();
 
         let first_player_card = deck_to_use.deal_card();
         let second_player_card = deck_to_use.deal_card();
@@ -37,19 +37,12 @@ impl GameService for GameServiceImpl {
     }
 
     fn hit(&self, request: GameRequest) -> GameResponse {
-        let mut deck_to_use = self.deck.clone();
         let mut state = request.state.clone();
         let player_hand = &mut state.player_hand;
-        let dealer_hand = &state.dealer_hand;
         let split_hand = &mut state.player_split_hand;
 
-        let mut drawn_card;
-        loop {
-            drawn_card = deck_to_use.deal_card().unwrap();
-            if !player_hand.contains(&drawn_card) && !dealer_hand.contains(&drawn_card) && !split_hand.contains(&drawn_card) {
-                break;
-            }
-        }
+        let drawn_card = deal_non_dealt_card(request.state.clone().cards_dealt);
+        state.cards_dealt.push(drawn_card);
         
         if request.hand_number.unwrap() == 0 {
             player_hand.push(drawn_card);
@@ -64,21 +57,12 @@ impl GameService for GameServiceImpl {
     }
 
     fn stand(&self, request: GameRequest) -> GameResponse {
-        let mut deck_to_use = self.deck.clone();
         let mut state = request.state.clone();
-        let player_hand = &state.player_hand;
         let mut dealer_hand = state.dealer_hand.clone();
-        let split_hand = &state.player_split_hand;
 
         while calculate_hand_value(&dealer_hand) <= 17 {
-            let mut drawn_card;
-            loop {
-                drawn_card = deck_to_use.deal_card().unwrap();
-                if !player_hand.contains(&drawn_card) && !dealer_hand.contains(&drawn_card) && 
-                    !split_hand.contains(&drawn_card) {
-                    break;
-                }
-            }
+            let drawn_card = deal_non_dealt_card(state.clone().cards_dealt);
+            state.cards_dealt.push(drawn_card);
             dealer_hand.push(drawn_card);
         }
 
@@ -118,20 +102,26 @@ impl GameService for GameServiceImpl {
         let dealer_hand = state.dealer_hand.clone();
         let split_hand = state.player_split_hand.clone();
         
-
-        let mut drawn_card;
-        loop {
-            drawn_card = deck_to_use.deal_card().unwrap();
-            if !player_hand.contains(&drawn_card) && !dealer_hand.contains(&drawn_card) && 
-                                !split_hand.contains(&drawn_card) {
-                break;
-            }
-        }
+        let mut drawn_card = deal_non_dealt_card(state.clone().cards_dealt);
+        
+        state.cards_dealt.push(drawn_card);
         player_hand.push(drawn_card);
         state.player_hand = player_hand;
 
         request.state = state;
         self.stand(request)
     }
+}
+
+fn deal_non_dealt_card(cards_dealt:Vec<Card>) -> Card{
+    let mut deck = Deck::new();
+    let mut drawn_card;
+    loop {
+        drawn_card = deck.deal_card().unwrap();
+        if !cards_dealt.contains(&drawn_card) {
+            break;
+        }
+    }
+    drawn_card
 }
 

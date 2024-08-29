@@ -1,5 +1,5 @@
 use serde::{Serialize, Deserialize};
-use rand::seq::SliceRandom; // For the `shuffle` method
+use rand::seq::SliceRandom; 
 use rand::thread_rng;    
 
 
@@ -7,7 +7,7 @@ use rand::thread_rng;
 pub struct GameRequest {
     pub state: GameState,
     pub hand_number: Option<i16>,
-    pub stake: Option<f64>,
+    pub stake: Option<f64>, // TODO: add stake to the other 
     pub additional_stake: Option<f64>
 }
 
@@ -111,6 +111,7 @@ pub struct GameState {
     pub player_hand: Vec<Card>,
     pub player_split_hand: Vec<Card>,
     pub dealer_hand: Vec<Card>,
+    pub cards_dealt: Vec<Card>,
 }
 
 impl GameState {
@@ -128,15 +129,8 @@ impl GameState {
             player_hand: Vec::new(),
             player_split_hand: Vec::new(),
             dealer_hand: Vec::new(),
+            cards_dealt:Vec::new()
         }
-    }
-
-    pub fn set_stake(&mut self, stake:f64) {
-        self.stake = stake;
-    }
-
-    pub fn set_balance(&mut self, balance:f64) {
-        self.balance = balance;
     }
 }
 
