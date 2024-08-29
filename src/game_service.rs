@@ -1,10 +1,12 @@
 
 use crate::model::{GameRequest, GameResponse, GameState, Deck};
 use crate::response_builder::ResponseBuilder;
+use crate::utils::calculate_hand_value;
 
 pub trait GameService {
     fn start(&self, request: GameRequest) -> GameResponse;
     fn hit(&self, request: GameRequest) -> GameResponse;
+    fn stand(&self, request:GameRequest) -> GameResponse;
 }
 
 pub struct GameServiceImpl {
@@ -42,7 +44,6 @@ impl GameService for GameServiceImpl {
         let mut drawn_card;
         loop {
             drawn_card = deck_to_use.deal_card().unwrap();
-
             if !player_hand.contains(&drawn_card) && !dealer_hand.contains(&drawn_card) && !split_hand.contains(&drawn_card) {
                 break;
             }
@@ -60,6 +61,32 @@ impl GameService for GameServiceImpl {
         }
         state.player_hand = player_hand.to_vec();
         state.player_split_hand = split_hand.to_vec();
+
+        let response_buildr:ResponseBuilder = ResponseBuilder::new();
+        response_buildr.build_response(state)
+    }
+
+    fn stand(&self, request: GameRequest) -> GameResponse {
+        let mut deck_to_use = self.deck.clone();
+        let mut state = request.state.clone();
+        let player_hand = &state.player_hand;
+        let mut dealer_hand = state.dealer_hand.clone();
+        let split_hand = &state.player_split_hand;
+
+        while calculate_hand_value(&dealer_hand) <= 17 {
+            let mut drawn_card;
+            loop {
+                drawn_card = deck_to_use.deal_card().unwrap();
+                if !player_hand.contains(&drawn_card) && !dealer_hand.contains(&drawn_card) && 
+                    !split_hand.contains(&drawn_card) {
+                    break;
+                }
+            }
+            dealer_hand.push(drawn_card);
+        }
+
+        state.dealer_hand = dealer_hand;
+        state.is_round_over = true;
 
         let response_buildr:ResponseBuilder = ResponseBuilder::new();
         response_buildr.build_response(state)

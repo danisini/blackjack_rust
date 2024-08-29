@@ -70,11 +70,11 @@ impl GameController {
                 state: request.clone().state
             }
         } else {
-            GameResponse {
-                status: "success".to_string(),
-                message: "Standed!".to_string(),
-                state: state,
-            }
+            let service = GameServiceImpl {
+                deck: Deck::new()
+            };
+
+            service.stand(request)
         }
     }
 
