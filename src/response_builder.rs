@@ -18,7 +18,7 @@ impl ResponseBuilder {
         }
     }
 
-    fn update_state(&self, mut state:GameState) -> GameState {
+    fn update_state(&self, state:GameState) -> GameState {
         let mut response_state = GameState::new();
         let player_hand = state.clone().player_hand;
         let dealer_hand = state.clone().dealer_hand;

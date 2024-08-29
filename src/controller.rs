@@ -1,5 +1,5 @@
 
-use crate::model:: { GameState, GameRequest, GameResponse, Deck};
+use crate::model:: { GameState, GameRequest, GameResponse};
 use crate::game_service::{GameService, GameServiceImpl};
 
 pub struct GameController;

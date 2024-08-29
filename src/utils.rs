@@ -1,6 +1,4 @@
-use std::char::MAX;
-
-use crate::model::{Card, Suit, Rank};
+use crate::model::{Card, Rank};
 const MAX_NUMBER_OF_POINTS: i32 = 21;
 
 pub fn calculate_hand_value(hand: &[Card]) -> i32 {
@@ -35,7 +33,7 @@ pub fn has_player_won(player_hand: &[Card], dealer_hand: &[Card]) -> bool {
     if player_hand.is_empty() {
         return false;
     }
-    
+
     if is_participant_busted(player_hand) {
         return false;
     }
@@ -62,6 +60,7 @@ pub fn has_dealer_won(player_hand: &[Card], dealer_hand: &[Card]) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::model::Suit;
 
     #[test] 
     fn test_calculate_hand_value() {
