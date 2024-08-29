@@ -20,7 +20,7 @@ pub fn calculate_hand_value(hand: &[Card]) -> i32 {
         value -= 10;
         number_of_aces -= 1;
     }
-    
+
     value
 }
 
@@ -32,6 +32,10 @@ pub fn has_player_won(player_hand: &[Card], dealer_hand: &[Card]) -> bool {
     let player_value = calculate_hand_value(player_hand);
     let dealer_value = calculate_hand_value(dealer_hand);
 
+    if player_hand.is_empty() {
+        return false;
+    }
+    
     if is_participant_busted(player_hand) {
         return false;
     }

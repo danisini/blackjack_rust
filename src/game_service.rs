@@ -8,7 +8,7 @@ pub trait GameService {
     fn hit(&self, request: GameRequest) -> GameResponse;
     fn stand(&self, request:GameRequest) -> GameResponse;
     fn split(&self, request:GameRequest) -> GameResponse;
-    //fn double(&self, request:GameRequest) -> GameResponse;
+    fn double(&self, request:GameRequest) -> GameResponse;
 }
 
 pub struct GameServiceImpl {
@@ -105,6 +105,33 @@ impl GameService for GameServiceImpl {
 
         let response_buildr:ResponseBuilder = ResponseBuilder::new();
         response_buildr.build_response(state)
+    }
+
+    fn double(&self, mut request:GameRequest) -> GameResponse {
+        // TODO: validate balance
+        let mut state = request.state.clone();
+        let mut deck_to_use = self.deck.clone();
+
+        state.is_stake_doubled = true;
+
+        let mut player_hand = state.player_hand.clone();
+        let dealer_hand = state.dealer_hand.clone();
+        let split_hand = state.player_split_hand.clone();
+        
+
+        let mut drawn_card;
+        loop {
+            drawn_card = deck_to_use.deal_card().unwrap();
+            if !player_hand.contains(&drawn_card) && !dealer_hand.contains(&drawn_card) && 
+                                !split_hand.contains(&drawn_card) {
+                break;
+            }
+        }
+        player_hand.push(drawn_card);
+        state.player_hand = player_hand;
+
+        request.state = state;
+        self.stand(request)
     }
 }
 
