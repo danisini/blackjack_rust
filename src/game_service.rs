@@ -11,25 +11,23 @@ pub trait GameService {
     fn double(&self, request:GameRequest) -> GameResponse;
 }
 
-pub struct GameServiceImpl {
-    pub deck:Deck
-}
+pub struct GameServiceImpl;
 
 impl GameService for GameServiceImpl {
     fn start(&self, request: GameRequest) -> GameResponse {
-        let mut deck_to_use = self.deck.clone();
+        let mut deck = Deck::new();
         let mut state = GameState::new();
         state.balance = state.clone().balance;
         state.stake = request.stake.unwrap();
 
-        let first_player_card = deck_to_use.deal_card();
-        let second_player_card = deck_to_use.deal_card();
+        let first_player_card = deck.deal_card().unwrap();
+        let second_player_card = deck.deal_card().unwrap();
 
-        state.player_hand.push(first_player_card.unwrap());
-        state.player_hand.push(second_player_card.unwrap());
+        state.player_hand.push(first_player_card);
+        state.player_hand.push(second_player_card);
 
-        let first_dealer_card = deck_to_use.deal_card();
-        state.dealer_hand.push(first_dealer_card.unwrap());
+        let first_dealer_card = deck.deal_card().unwrap();
+        state.dealer_hand.push(first_dealer_card);
 
         let response_buildr:ResponseBuilder = ResponseBuilder::new();
         response_buildr.build_response(state)
@@ -92,23 +90,18 @@ impl GameService for GameServiceImpl {
     }
 
     fn double(&self, mut request:GameRequest) -> GameResponse {
-        // TODO: validate balance
         let mut state = request.state.clone();
-        let mut deck_to_use = self.deck.clone();
-
-        state.is_stake_doubled = true;
-
         let mut player_hand = state.player_hand.clone();
-        let dealer_hand = state.dealer_hand.clone();
-        let split_hand = state.player_split_hand.clone();
-        
-        let mut drawn_card = deal_non_dealt_card(state.clone().cards_dealt);
+    
+        let drawn_card = deal_non_dealt_card(state.clone().cards_dealt);
         
         state.cards_dealt.push(drawn_card);
         player_hand.push(drawn_card);
         state.player_hand = player_hand;
 
+        state.is_stake_doubled = true;
         request.state = state;
+        
         self.stand(request)
     }
 }

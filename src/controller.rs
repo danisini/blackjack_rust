@@ -6,9 +6,10 @@ pub struct GameController;
 
 impl GameController {
     pub fn start(request: GameRequest) -> GameResponse {
-        let mut state = request.clone().state;
+        let state = request.clone().state;
         let mut is_valid = ValidatorImpl::is_action_valid(&state, "/start");
         is_valid = is_valid && ValidatorImpl::has_stake(request.clone());
+
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),
@@ -16,16 +17,13 @@ impl GameController {
                 state: request.clone().state
             }
         } else {
-            let service = GameServiceImpl {
-                deck: Deck::new()
-            };
-
+            let service = GameServiceImpl {};
             service.start(request)
         }
     }
 
     pub fn split(request: GameRequest) -> GameResponse {
-        let mut state = request.clone().state;
+        let state = request.clone().state;
         let mut is_valid = ValidatorImpl::is_action_valid(&state, "/split");
         is_valid = is_valid && ValidatorImpl::has_additional_stake(request.clone());
         if !is_valid {
@@ -35,17 +33,16 @@ impl GameController {
                 state: request.clone().state
             }
         } else {
-            let service = GameServiceImpl {
-                deck: Deck::new()
-            };
-
+            let service = GameServiceImpl {};
             service.split(request)
         }
     }
 
     pub fn double_stake(request: GameRequest) -> GameResponse {
-        let mut state = request.clone().state;
-        let is_valid = ValidatorImpl::is_action_valid(&state, "/double");
+        let state = request.clone().state;
+        let mut is_valid = ValidatorImpl::is_action_valid(&state, "/double");
+        is_valid = is_valid && ValidatorImpl::has_enough_balance(&state, state.additional_stake + state.stake);
+        
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),
@@ -53,16 +50,13 @@ impl GameController {
                 state: request.clone().state
             }
         } else {
-            let service = GameServiceImpl {
-                deck: Deck::new()
-            };
-
+            let service = GameServiceImpl {};
             service.double(request)
         }
     }
 
     pub fn stand(request: GameRequest) -> GameResponse {
-        let mut state = request.clone().state;
+        let state = request.clone().state;
         let is_valid = ValidatorImpl::is_action_valid(&state, "/stand");
         if !is_valid {
             GameResponse {
@@ -71,16 +65,13 @@ impl GameController {
                 state: request.clone().state
             }
         } else {
-            let service = GameServiceImpl {
-                deck: Deck::new()
-            };
-
+            let service = GameServiceImpl {};
             service.stand(request)
         }
     }
 
     pub fn hit(request: GameRequest) -> GameResponse {
-        let mut state = request.clone().state;
+        let state = request.clone().state;
         let mut is_valid = ValidatorImpl::is_action_valid(&state, "/hit");
         is_valid = is_valid && ValidatorImpl::has_enough_balance(&state, state.clone().stake);
         is_valid = is_valid && ValidatorImpl::has_hand_number(request.clone());
@@ -91,10 +82,7 @@ impl GameController {
                 state: request.clone().state
             }
         } else {
-            let service = GameServiceImpl {
-                deck: Deck::new()
-            };
-
+            let service = GameServiceImpl {};
             service.hit(request)
         }
     }
