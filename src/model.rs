@@ -6,7 +6,9 @@ use rand::thread_rng;
 #[derive(Serialize, Deserialize, Clone)]
 pub struct GameRequest {
     pub state: GameState,
-    pub hand_number: Option<i16>
+    pub hand_number: Option<i16>,
+    pub stake: Option<f64>,
+    pub additional_stake: Option<f64>
 }
 
 #[derive(Serialize, Deserialize)]

@@ -1,5 +1,5 @@
 
-use crate::model::{GameRequest, GameResponse, GameState, Deck};
+use crate::model::{GameRequest, GameResponse, GameState, Deck, Card};
 use crate::response_builder::ResponseBuilder;
 use crate::utils::calculate_hand_value;
 
@@ -7,6 +7,8 @@ pub trait GameService {
     fn start(&self, request: GameRequest) -> GameResponse;
     fn hit(&self, request: GameRequest) -> GameResponse;
     fn stand(&self, request:GameRequest) -> GameResponse;
+    fn split(&self, request:GameRequest) -> GameResponse;
+    //fn double(&self, request:GameRequest) -> GameResponse;
 }
 
 pub struct GameServiceImpl {
@@ -48,13 +50,8 @@ impl GameService for GameServiceImpl {
                 break;
             }
         }
-        if request.hand_number.is_none() {
-            return GameResponse {
-                state: state,
-                status: "falure".to_string(),
-                message: "Request is missing hand_number parameter in the body!".to_string()
-            }
-        } else if request.hand_number.unwrap() == 0 {
+        
+        if request.hand_number.unwrap() == 0 {
             player_hand.push(drawn_card);
         } else {
             split_hand.push(drawn_card);
@@ -87,6 +84,24 @@ impl GameService for GameServiceImpl {
 
         state.dealer_hand = dealer_hand;
         state.is_round_over = true;
+
+        let response_buildr:ResponseBuilder = ResponseBuilder::new();
+        response_buildr.build_response(state)
+    }
+
+    fn split(&self, request:GameRequest) -> GameResponse {
+        let mut state = request.state.clone();
+
+        state.additional_stake = request.additional_stake.unwrap();
+
+        let mut player_hand = state.player_hand.clone();
+        let mut split_hand: Vec<Card> = Vec::new();
+        
+        split_hand.push(*player_hand.clone().get(1).unwrap());
+        player_hand.remove(1);
+        
+        state.player_hand = player_hand;
+        state.player_split_hand = split_hand;
 
         let response_buildr:ResponseBuilder = ResponseBuilder::new();
         response_buildr.build_response(state)
