@@ -43,16 +43,14 @@ impl ResponseBuilder {
             let has_player_split_won = has_player_won(&split_hand, &dealer_hand);
             let has_player_won = has_first_hand_player_won || has_player_split_won;
 
-            response_state.has_player_won = has_player_won;
-            response_state.has_dealer_won = has_dealer_won;
-            response_state.is_round_over = has_dealer_won || has_player_won;
-
             if has_player_won {
                 response_state = self.calculate_win_amount(state.clone(), has_first_hand_player_won, has_player_split_won);
             } else if has_dealer_won {
                 response_state = self.calculate_lost_amount(state.clone());
             }
-            
+            response_state.has_player_won = has_player_won.clone();
+            response_state.has_dealer_won = has_dealer_won.clone();
+            response_state.is_round_over = has_dealer_won || has_player_won;
         }
 
         response_state.additional_stake = state.clone().additional_stake;

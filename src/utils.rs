@@ -8,7 +8,7 @@ pub fn calculate_hand_value(hand: &[Card]) -> i32 {
     let mut number_of_aces = 0;
 
     for card in hand {
-        let rank_value = card.rank as i32;
+        let rank_value = card.rank.value();
         if card.rank == Rank::Ace {
             number_of_aces += 1;
         }
@@ -20,7 +20,7 @@ pub fn calculate_hand_value(hand: &[Card]) -> i32 {
         value -= 10;
         number_of_aces -= 1;
     }
-
+    
     value
 }
 

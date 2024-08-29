@@ -25,7 +25,7 @@ impl GameController {
 
     pub fn split(request: GameRequest) -> GameResponse {
         let mut state = request.clone().state;
-        let is_valid = ValidatorImpl::is_action_valid(&state, "/start");
+        let is_valid = ValidatorImpl::is_action_valid(&state, "/split");
         
         if !is_valid {
             GameResponse {
@@ -44,7 +44,7 @@ impl GameController {
 
     pub fn double_stake(request: GameRequest) -> GameResponse {
         let mut state = request.clone().state;
-        let is_valid = ValidatorImpl::is_action_valid(&state, "/start");
+        let is_valid = ValidatorImpl::is_action_valid(&state, "/double");
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),
@@ -62,7 +62,7 @@ impl GameController {
 
     pub fn stand(request: GameRequest) -> GameResponse {
         let mut state = request.clone().state;
-        let is_valid = ValidatorImpl::is_action_valid(&state, "/start");
+        let is_valid = ValidatorImpl::is_action_valid(&state, "/stand");
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),
@@ -80,7 +80,8 @@ impl GameController {
 
     pub fn hit(request: GameRequest) -> GameResponse {
         let mut state = request.clone().state;
-        let is_valid = ValidatorImpl::is_action_valid(&state, "/start");
+        let mut is_valid = ValidatorImpl::is_action_valid(&state, "/hit");
+        is_valid = is_valid && ValidatorImpl::has_enough_balance(&state, state.clone().stake);
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),
@@ -88,11 +89,11 @@ impl GameController {
                 state: request.clone().state
             }
         } else {
-            GameResponse {
-                status: "success".to_string(),
-                message: "Hit!".to_string(),
-                state: state,
-            }
+            let service = GameServiceImpl {
+                deck: Deck::new()
+            };
+
+            service.hit(request)
         }
     }
     
