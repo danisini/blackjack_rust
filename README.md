@@ -18,7 +18,6 @@
         "dealer_hand": [],
         "player_split_hand": [],
         "possible_actions": ["/start"]
-    },
-    "stake": 1.0
+    }
 }
 ```

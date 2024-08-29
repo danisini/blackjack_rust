@@ -1,6 +1,8 @@
 mod controller;
 mod model;
 mod game_service;
+mod response_builder;
+mod utils;
 use warp::Filter;
 use crate::controller::GameController;
 use crate::model::GameRequest;

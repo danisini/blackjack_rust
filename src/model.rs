@@ -17,12 +17,12 @@ pub struct GameResponse {
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Card {
-    suit: Suit,
-    rank: Rank,
+    pub suit: Suit,
+    pub rank: Rank,
 }
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
-enum Suit {
+pub enum Suit {
     Hearts, Diamonds, Clubs, Spades,
 }
 
