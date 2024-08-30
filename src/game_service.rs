@@ -17,18 +17,22 @@ impl GameService for GameServiceImpl {
     fn start(&self, request: GameRequest) -> GameResponse {
         let mut deck = Deck::new();
         let mut state = GameState::new();
-        state.balance = state.clone().balance;
+        state.balance = request.state.clone().balance;
         state.stake = request.stake.unwrap();
 
         let first_player_card = deck.deal_card().unwrap();
         let second_player_card = deck.deal_card().unwrap();
-
-        state.player_hand.push(first_player_card);
-        state.player_hand.push(second_player_card);
+        state.player_hand.push(first_player_card.clone());
+        state.player_hand.push(second_player_card.clone());
 
         let first_dealer_card = deck.deal_card().unwrap();
-        state.dealer_hand.push(first_dealer_card);
+        state.dealer_hand.push(first_dealer_card.clone());
 
+        state.cards_dealt.push(first_player_card);
+        state.cards_dealt.push(second_player_card);
+        state.cards_dealt.push(first_dealer_card);
+
+        println!("BALANCE:{}", state.balance);
         let response_buildr:ResponseBuilder = ResponseBuilder::new();
         response_buildr.build_response(state)
 
