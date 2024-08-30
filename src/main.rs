@@ -4,6 +4,8 @@ mod game_service;
 mod response_builder;
 mod utils;
 use warp::Filter;
+use env_logger;
+use log::LevelFilter;
 use crate::controller::GameController;
 use crate::model::GameRequest;
 
@@ -11,6 +13,8 @@ use crate::model::GameRequest;
 #[tokio::main]
 
 async fn main() {
+    env_logger::builder().filter_level(LevelFilter::Info).init();
+
     let start = warp::path("start")
     .and(warp::post())
     .and(warp::body::json())

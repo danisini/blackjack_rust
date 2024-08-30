@@ -1,6 +1,7 @@
 
 use crate::model:: { GameState, GameRequest, GameResponse};
 use crate::game_service::{GameService, GameServiceImpl};
+use log::error;
 
 pub struct GameController;
 
@@ -11,6 +12,7 @@ impl GameController {
         is_valid = is_valid && ValidatorImpl::has_stake(request.clone());
 
         if !is_valid {
+            error!("Invalid request - stake missing or action not valid!");
             GameResponse {
                 status: "failure".to_string(),
                 message: "Request not valid!".to_string(),
@@ -27,6 +29,7 @@ impl GameController {
         let mut is_valid = ValidatorImpl::is_action_valid(&state, "/split");
         is_valid = is_valid && ValidatorImpl::has_additional_stake(request.clone());
         if !is_valid {
+            error!("Invalid request - additional_stake missing or action not valid!");
             GameResponse {
                 status: "failure".to_string(),
                 message: "Request not valid!".to_string(),
@@ -44,6 +47,7 @@ impl GameController {
         is_valid = is_valid && ValidatorImpl::has_enough_balance(&state, state.additional_stake + state.stake);
         
         if !is_valid {
+            error!("Invalid request - not enough balance or action not valid!");
             GameResponse {
                 status: "failure".to_string(),
                 message: "Request not valid!".to_string(),
@@ -59,6 +63,7 @@ impl GameController {
         let state = request.clone().state;
         let is_valid = ValidatorImpl::is_action_valid(&state, "/stand");
         if !is_valid {
+            error!("Invalid request - action not valid!");
             GameResponse {
                 status: "failure".to_string(),
                 message: "Request not valid!".to_string(),
@@ -76,6 +81,7 @@ impl GameController {
         is_valid = is_valid && ValidatorImpl::has_enough_balance(&state, state.clone().stake);
         is_valid = is_valid && ValidatorImpl::has_hand_number(request.clone());
         if !is_valid {
+            error!("Invalid request - not enough balance, no hand_number present in body or action not valid!");
             GameResponse {
                 status: "failure".to_string(),
                 message: "Request not valid!".to_string(),
