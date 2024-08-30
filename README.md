@@ -119,33 +119,58 @@ I have implemented a blackjack server which has the following API:
 ``` json
 {
     "state": {
-        "player_won": false,
         "has_player_won": false,
         "has_dealer_won": false,
-        "is_stake_doubled": false,
         "is_round_over": false,
+        "is_stake_doubled": false,
         "stake": 1.0,
-        "additional_stake":0.0,
+        "additional_stake": 0.0,
         "win_amount": 0.0,
         "balance": 100.0,
+        "possible_actions": [
+            "/double",
+            "/stand",
+            "/hit"
+        ],
         "player_hand": [
             {
-                "suit": "Clubs",
-                "rank": "Eight"
+                "suit": "Diamonds",
+                "rank": "Ace"
             },
             {
-                "suit": "Clubs",
-                "rank": "Ten"
+                "suit": "Diamonds",
+                "rank": "Jack"
+            },
+            {
+                "suit": "Diamonds",
+                "rank": "Queen"
             }
         ],
         "player_split_hand": [],
         "dealer_hand": [
             {
-                "suit": "Clubs",
-                "rank": "Nine"
+                "suit": "Hearts",
+                "rank": "Seven"
             }
         ],
-        "possible_actions": ["/hit", "/double", "/stand"]
+        "cards_dealt": [
+            {
+                "suit": "Diamonds",
+                "rank": "Ace"
+            },
+            {
+                "suit": "Diamonds",
+                "rank": "Jack"
+            },
+            {
+                "suit": "Hearts",
+                "rank": "Seven"
+            },
+            {
+                "suit": "Diamonds",
+                "rank": "Queen"
+            }
+        ]
     }
 }
 ```
@@ -183,7 +208,33 @@ I have implemented a blackjack server which has the following API:
                 "rank": "Nine"
             }
         ],
-        "possible_actions": ["/split"]
+        "possible_actions": ["/split", "/hit", "double"],
+        "cards_dealt": [
+            {
+                "suit": "Diamonds",
+                "rank": "Ace"
+            },
+            {
+                "suit": "Diamonds",
+                "rank": "Jack"
+            },
+            {
+                "suit": "Hearts",
+                "rank": "Seven"
+            },
+            {
+                "suit": "Diamonds",
+                "rank": "Queen"
+            },
+            {
+                "suit": "Hearts",
+                "rank": "Five"
+            },
+            {
+                "suit": "Clubs",
+                "rank": "Nine"
+            }
+        ]
     },
     "additional_stake": 2.0
 }
@@ -195,33 +246,58 @@ I have implemented a blackjack server which has the following API:
 ``` json 
 {
     "state": {
-        "player_won": false,
         "has_player_won": false,
         "has_dealer_won": false,
-        "is_stake_doubled": false,
         "is_round_over": false,
+        "is_stake_doubled": false,
         "stake": 1.0,
-        "additional_stake":0.0,
+        "additional_stake": 0.0,
         "win_amount": 0.0,
         "balance": 100.0,
+        "possible_actions": [
+            "/double",
+            "/stand",
+            "/hit"
+        ],
         "player_hand": [
             {
-                "suit": "Clubs",
-                "rank": "Ten"
+                "suit": "Diamonds",
+                "rank": "Ace"
             },
             {
-                "suit": "Clubs",
-                "rank": "Ten"
+                "suit": "Diamonds",
+                "rank": "Jack"
+            },
+            {
+                "suit": "Diamonds",
+                "rank": "Queen"
             }
         ],
         "player_split_hand": [],
         "dealer_hand": [
             {
-                "suit": "Clubs",
-                "rank": "Nine"
+                "suit": "Hearts",
+                "rank": "Seven"
             }
         ],
-        "possible_actions": ["/double", "/hit", "/split"]
+        "cards_dealt": [
+            {
+                "suit": "Diamonds",
+                "rank": "Ace"
+            },
+            {
+                "suit": "Diamonds",
+                "rank": "Jack"
+            },
+            {
+                "suit": "Hearts",
+                "rank": "Seven"
+            },
+            {
+                "suit": "Diamonds",
+                "rank": "Queen"
+            }
+        ]
     }
 }
 ```
