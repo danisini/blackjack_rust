@@ -32,7 +32,6 @@ impl GameService for GameServiceImpl {
         state.cards_dealt.push(second_player_card);
         state.cards_dealt.push(first_dealer_card);
 
-        println!("BALANCE:{}", state.balance);
         let response_buildr:ResponseBuilder = ResponseBuilder::new();
         response_buildr.build_response(state)
 

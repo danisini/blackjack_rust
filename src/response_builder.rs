@@ -23,8 +23,8 @@ impl ResponseBuilder {
         let player_hand = state.clone().player_hand;
         let dealer_hand = state.clone().dealer_hand;
         let split_hand = state.clone().player_split_hand;
-
         let mut possible_actions: Vec<String> = Vec::new();
+        response_state.balance = state.balance;
 
         if self.can_game_continue(&player_hand, &dealer_hand, state.clone().is_round_over) {
             if self.is_split_possible(&player_hand) {
@@ -54,7 +54,6 @@ impl ResponseBuilder {
         }
 
         response_state.additional_stake = state.clone().additional_stake;
-        response_state.balance = state.balance;
         response_state.possible_actions = possible_actions;
         response_state.player_split_hand = split_hand;
         response_state.dealer_hand = dealer_hand;
@@ -71,6 +70,8 @@ impl ResponseBuilder {
         }
 
         state.balance -= lost_amount;
+        state.win_amount = -lost_amount;
+        println!("Balance:{}", state.balance);
         state
     }
 
