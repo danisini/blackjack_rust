@@ -50,7 +50,7 @@ impl ResponseBuilder {
             }
             response_state.has_player_won = has_player_won.clone();
             response_state.has_dealer_won = has_dealer_won.clone();
-            response_state.is_round_over = has_dealer_won || has_player_won;
+            response_state.is_round_over = true;
         }
 
         response_state.additional_stake = state.clone().additional_stake;

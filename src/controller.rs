@@ -13,7 +13,7 @@ impl GameController {
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),
-                message: "Method not allowed!".to_string(),
+                message: "Request not valid!".to_string(),
                 state: request.clone().state
             }
         } else {
@@ -29,7 +29,7 @@ impl GameController {
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),
-                message: "Method not allowed!".to_string(),
+                message: "Request not valid!".to_string(),
                 state: request.clone().state
             }
         } else {
@@ -46,7 +46,7 @@ impl GameController {
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),
-                message: "Method not allowed!".to_string(),
+                message: "Request not valid!".to_string(),
                 state: request.clone().state
             }
         } else {
@@ -61,7 +61,7 @@ impl GameController {
         if !is_valid {
             GameResponse {
                 status: "failure".to_string(),
-                message: "Method not allowed!".to_string(),
+                message: "Request not valid!".to_string(),
                 state: request.clone().state
             }
         } else {
@@ -119,6 +119,215 @@ impl Validator for ValidatorImpl {
     fn has_stake(request:GameRequest) -> bool {
         request.stake.is_some()
     }
+}
+
+#[cfg(test)]
+mod controller_tests {
+    use super::*;
+    use crate::model::{GameState, GameRequest, GameResponse, Rank, Suit, Card};
+    use crate::game_service::GameServiceImpl;
+    
+    fn create_request(state: GameState) -> GameRequest {
+        GameRequest {
+            state: state,
+            hand_number: None,
+            stake: None,
+            additional_stake: None,
+        }
+    }
+
+    fn create_state() -> GameState {
+        GameState {
+            win_amount:0.0,
+            cards_dealt: vec![],
+            has_player_won:false,
+            has_dealer_won:false,
+            is_round_over:false,
+            is_stake_doubled:false,
+            balance: 100.0,
+            stake: 1.0,
+            additional_stake: 0.0,
+            player_hand: vec![],
+            dealer_hand: vec![],
+            player_split_hand: vec![],
+            possible_actions: vec![],
+        }
+    }
+ 
+    #[test]
+    fn test_start_valid_request() {
+        let mut state = create_state();
+        state.possible_actions.push("/start".to_string());
+        let mut request = create_request(state.clone());
+        request.stake = Some(1.0);
+
+        let response = GameController::start(request);
+
+        assert_eq!(response.status, "success");
+        assert_eq!(response.message, "Successful operation!");
+    }
+
+    #[test]
+    fn test_start_no_stake() {
+        let mut state = create_state();
+        state.possible_actions.push("/start".to_string());
+        let request = create_request(state.clone());
+
+        let response = GameController::start(request);
+
+        assert_eq!(response.status, "failure");
+        assert_eq!(response.message, "Request not valid!");
+    }
+
+    #[test]
+    fn test_start_not_possible_operation() {
+        let state = create_state();
+        let mut request = create_request(state.clone());
+        request.stake = Some(1.0);
+
+        let response = GameController::start(request);
+
+        assert_eq!(response.status, "failure");
+        assert_eq!(response.message, "Request not valid!");
+    }
+
+    #[test]
+    fn test_split_valid_request() {
+        let mut state = create_state();
+        state.possible_actions.push("/split".to_string());
+        let card = Card{ suit:Suit::Clubs, rank:Rank::Ace};
+
+        state.player_hand.push(card);
+        state.player_hand.push(card);
+        let mut request = create_request(state);
+        request.additional_stake = Some(2.0);
+
+        let response = GameController::split(request);
+
+        assert_eq!(response.status, "success");
+        assert_eq!(response.message, "Successful operation!");
+        assert!(response.state.player_split_hand.len() > 0);
+        assert!(response.state.additional_stake > 0.0);
+        assert!(!response.state.is_round_over);
+    }
+
+    #[test]
+    fn test_split_not_possible_action() {
+        let state = create_state();
+        let mut request = create_request(state);
+        request.additional_stake = Some(2.0);
+
+        let response = GameController::split(request);
+
+        assert_eq!(response.status, "failure");
+        assert_eq!(response.message, "Request not valid!");
+    }
+
+    #[test]
+    fn test_split_no_additional_stake() {
+        let mut state = create_state();
+        state.possible_actions.push("/split".to_string());
+        let request = create_request(state);
+
+        let response = GameController::split(request);
+
+        assert_eq!(response.status, "failure");
+        assert_eq!(response.message, "Request not valid!");
+    }
+
+    #[test]
+    fn test_double_valid_request() {
+        let mut state = create_state();
+        state.possible_actions.push("/double".to_string());
+        let card = Card{ suit:Suit::Clubs, rank:Rank::Ace};
+        state.player_hand.push(card);
+        state.player_hand.push(card);
+
+        let request = create_request(state);
+        let response = GameController::double_stake(request);
+
+        assert_eq!(response.status, "success");
+        assert_eq!(response.message, "Successful operation!");
+        assert!(response.state.possible_actions.len() == 1)
+    }
+
+    #[test]
+    fn test_double_not_possible_action() {
+        let state = create_state();
+        let request = create_request(state);
+
+        let response = GameController::double_stake(request);
+
+        assert_eq!(response.status, "failure");
+        assert_eq!(response.message, "Request not valid!");
+    }
+
+    #[test]
+    fn test_stand_valid_request() {
+        let mut state = create_state();
+        state.possible_actions.push("/stand".to_string());
+        let card = Card{ suit:Suit::Clubs, rank:Rank::Ace};
+        state.player_hand.push(card);
+        state.player_hand.push(card);
+
+        let request = create_request(state);
+        let response = GameController::stand(request);
+
+        assert_eq!(response.status, "success");
+        assert_eq!(response.message, "Successful operation!");
+        assert!(response.state.is_round_over);
+        assert!(response.state.possible_actions.len() == 1)
+    }
+
+    #[test]
+    fn test_stand_not_possible_action() {
+        let state = create_state();
+        let request = create_request(state);
+
+        let response = GameController::stand(request);
+
+        assert_eq!(response.status, "failure");
+        assert_eq!(response.message, "Request not valid!");
+    }
 
 
+    #[test]
+    fn test_hit_valid_request() {
+        let mut state = create_state();
+        state.possible_actions.push("/hit".to_string());
+        let card = Card{ suit:Suit::Clubs, rank:Rank::Four};
+        state.player_hand.push(card);
+        state.player_hand.push(card);
+
+        let mut request = create_request(state);
+        request.hand_number = Some(0);
+        let response = GameController::hit(request);
+
+        assert_eq!(response.status, "success");
+        assert_eq!(response.message, "Successful operation!");
+    }
+
+    #[test]
+    fn test_hit_not_possible_action() {
+        let state = create_state();
+        let request = create_request(state);
+
+        let response = GameController::hit(request);
+
+        assert_eq!(response.status, "failure");
+        assert_eq!(response.message, "Request not valid!");
+    }
+
+    #[test]
+    fn test_hit_not_hand_number() {
+        let mut state = create_state();
+        state.possible_actions.push("/hit".to_string());
+
+        let request = create_request(state);
+        
+        let response = GameController::hit(request);
+
+        assert_eq!(response.status, "failure");
+        assert_eq!(response.message, "Request not valid!");
+    }
 }
