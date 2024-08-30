@@ -124,8 +124,7 @@ impl Validator for ValidatorImpl {
 #[cfg(test)]
 mod controller_tests {
     use super::*;
-    use crate::model::{GameState, GameRequest, GameResponse, Rank, Suit, Card};
-    use crate::game_service::GameServiceImpl;
+    use crate::model::{GameState, GameRequest, Rank, Suit, Card};
     
     fn create_request(state: GameState) -> GameRequest {
         GameRequest {
