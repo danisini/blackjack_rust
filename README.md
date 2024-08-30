@@ -2,7 +2,7 @@
 
 ## body example
 
-```json```
+```json
 {
     "state": {
         "player_won": false,
@@ -20,13 +20,13 @@
         "possible_actions": ["/start"]
     }
 }
-``
+```
 
 # Hit request
 
 ## body example
 
-```json```
+```json
 {
     "state": {
         "player_won": false,
@@ -59,13 +59,13 @@
     },
     "hand_number":0
 }
-``
+```
 
 # Stand request
 
 ## body example
 
-``` json ```
+``` json
 {
     "state": {
         "player_won": false,
@@ -97,13 +97,13 @@
         "possible_actions": ["/hit", "/double", "/stand"]
     }
 }
-``
+```
 
 # Split request
 
 ## body request
 
-``` json ```
+``` json
 {
     "state": {
         "player_won": false,
@@ -136,13 +136,12 @@
     },
     "additional_stake": 2.0
 }
-``
-
+```
 # Double request
 
 ## body example
 
-``` json ```
+``` json 
 {
     "state": {
         "player_won": false,
@@ -174,4 +173,4 @@
         "possible_actions": ["/double", "/hit", "/split"]
     }
 }
-``
+```
